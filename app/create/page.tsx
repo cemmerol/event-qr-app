@@ -22,12 +22,7 @@ export default function CreatePage() {
 
     const { data, error } = await supabase
       .from("events")
-      .insert([
-        {
-          title,
-          slug,
-        },
-      ])
+      .insert([{ title, slug }])
       .select()
       .single();
 
@@ -42,9 +37,8 @@ export default function CreatePage() {
     setLoading(false);
   };
 
-  // 🚀 BASE URL (LOCAL vs PROD farkını çözer)
-  const baseUrl =
-    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  // 🚀 FORCE PRODUCTION BASE URL
+  const baseUrl = "https://event-qr-app.vercel.app";
 
   const eventUrl = createdEvent
     ? `${baseUrl}/e/${createdEvent.slug}`
@@ -77,7 +71,6 @@ export default function CreatePage() {
         {loading ? "Oluşturuluyor..." : "Event Oluştur"}
       </button>
 
-      {/* 🔥 EVENT SONRASI */}
       {createdEvent && (
         <div style={{ marginTop: 30 }}>
           <h2>✅ Event Hazır</h2>
