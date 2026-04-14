@@ -38,11 +38,11 @@ export default function CreatePage() {
   };
 
   // 🚀 FORCE PRODUCTION BASE URL
-  const baseUrl = "https://event-qr-app.vercel.app";
+const baseUrl = "https://event-qr-app.vercel.app";
 
-  const eventUrl = createdEvent
-    ? `${baseUrl}/e/${createdEvent.slug}`
-    : "";
+const eventUrl = createdEvent
+  ? `${baseUrl}/e/${createdEvent.slug}`
+  : "";;
 
   return (
     <div style={{ padding: 20, maxWidth: 500 }}>
