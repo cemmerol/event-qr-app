@@ -15,11 +15,13 @@ export default function CreatePage() {
 
     setLoading(true)
 
+    // 🔥 slug üret
     const slug = slugify(title, {
       lower: true,
       strict: true,
     })
 
+    // 🔥 DB insert
     const { data, error } = await supabase
       .from("events")
       .insert([
@@ -29,25 +31,28 @@ export default function CreatePage() {
         },
       ])
       .select()
+      .single()
 
     if (error) {
       alert("Hata: " + error.message)
-    } else {
-      setCreatedEvent(data?.[0])
-      setTitle("")
+      setLoading(false)
+      return
     }
 
+    // başarı
+    setCreatedEvent(data)
+    setTitle("")
     setLoading(false)
   }
 
   return (
     <div style={{ padding: 20, maxWidth: 500 }}>
-      <h1>Create Event 🎉</h1>
+      <h1>🎉 Event Oluştur</h1>
 
       <input
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        placeholder="Event adı (örn: Cem's Wedding)"
+        placeholder="Örn: Alis Day"
         style={{
           width: "100%",
           padding: 10,
@@ -67,9 +72,10 @@ export default function CreatePage() {
         {loading ? "Oluşturuluyor..." : "Event Oluştur"}
       </button>
 
+      {/* 🔥 Event oluşturulduktan sonra */}
       {createdEvent && (
         <div style={{ marginTop: 30 }}>
-          <h2>Event hazır 🎯</h2>
+          <h2>✅ Event Hazır</h2>
 
           <p>
             Link:
