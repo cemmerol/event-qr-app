@@ -1,44 +1,50 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { supabase } from "@/lib/supabase"
-import slugify from "slugify"
-import QRCode from "react-qr-code"
+import { useState } from "react";
+import { supabase } from "@/lib/supabase";
+import slugify from "slugify";
+import QRCode from "react-qr-code";
 
 export default function CreatePage() {
-  const [title, setTitle] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [createdEvent, setCreatedEvent] = useState<any>(null)
+  const [title, setTitle] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [createdEvent, setCreatedEvent] = useState<any>(null);
 
   const createEvent = async () => {
-    if (!title) return
+    if (!title) return;
 
-    setLoading(true)
+    setLoading(true);
 
     const slug = slugify(title, {
       lower: true,
       strict: true,
-    })
+    });
 
     const { data, error } = await supabase
       .from("events")
-      .insert([
-        {
-          title,
-          slug,
-        },
-      ])
+      .insert([{ title, slug }])
       .select()
+      .single();
 
     if (error) {
-      alert("Hata: " + error.message)
-    } else {
-      setCreatedEvent(data?.[0])
-      setTitle("")
+      alert("Hata: " + error.message);
+      setLoading(false);
+      return;
     }
 
-    setLoading(false)
-  }
+    setCreatedEvent(data);
+    setTitle("");
+    setLoading(false);
+  };
+
+  // 🚀 PRODUCTION SAFE BASE URL
+  const baseUrl =
+    process.env.NEXT_PUBLIC_APP_URL ||
+    "https://event-qr-app.vercel.app";
+
+  const eventUrl = createdEvent
+    ? `${baseUrl}/e/${createdEvent.slug}`
+    : "";
 
   return (
     <div style={{ padding: 20, maxWidth: 500 }}>
@@ -74,18 +80,14 @@ export default function CreatePage() {
           <p>
             Link:
             <br />
-            <code>
-              {`http://localhost:3000/e/${createdEvent.slug}`}
-            </code>
+            <code>{eventUrl}</code>
           </p>
 
           <div style={{ marginTop: 20 }}>
-            <QRCode
-              value={`http://localhost:3000/e/${createdEvent.slug}`}
-            />
+            <QRCode value={eventUrl} />
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }
