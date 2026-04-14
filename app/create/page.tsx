@@ -44,6 +44,7 @@ const eventUrl = createdEvent
   ? `${baseUrl}/e/${createdEvent.slug}`
   : "";;
 
+
   return (
     <div style={{ padding: 20, maxWidth: 500 }}>
       <h1>🎉 Event Oluştur</h1>
@@ -70,6 +71,7 @@ const eventUrl = createdEvent
       >
         {loading ? "Oluşturuluyor..." : "Event Oluştur"}
       </button>
+
 
       {createdEvent && (
         <div style={{ marginTop: 30 }}>
