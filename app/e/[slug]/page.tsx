@@ -34,9 +34,7 @@ export default function EventPage() {
   };
 
   useEffect(() => {
-    if (slug) {
-      fetchData();
-    }
+    if (slug) fetchData();
   }, [slug]);
 
   if (!event) {
@@ -47,80 +45,197 @@ export default function EventPage() {
     <div
       style={{
         minHeight: "100vh",
-        background: "#f7f3f0",
-        padding: "20px 16px 40px",
+        backgroundImage: "url('/floral-bg.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "top center",
+        backgroundRepeat: "no-repeat",
+        padding: "34px 18px 50px",
         fontFamily: "sans-serif",
       }}
     >
-      {/* HEADER */}
-      <div style={{ textAlign: "center", marginTop: 20 }}>
-        <h1
-          style={{
-            fontSize: 28,
-            fontWeight: 600,
-            color: "#8b5e4c",
-            marginBottom: 10,
-          }}
-        >
-          {event.title}
-        </h1>
-
-        <p
-          style={{
-            fontSize: 18,
-            fontWeight: 500,
-            color: "#3f3f3f",
-            marginBottom: 10,
-          }}
-        >
-          Anılarını Bizimle Paylaş
-        </p>
-
-        <p
-          style={{
-            fontSize: 14,
-            color: "#6b7280",
-            lineHeight: 1.6,
-          }}
-        >
-          Bu özel günden yakaladığın kareleri <br />
-          yükleyerek hikayemize ortak ol ✨
-        </p>
-      </div>
-
-      {/* UPLOAD CARD */}
-      <div
+      <main
         style={{
-          marginTop: 25,
-          background: "#fff",
-          borderRadius: 20,
-          padding: 20,
-          boxShadow: "0 10px 30px rgba(0,0,0,0.05)",
+          maxWidth: 560,
+          margin: "0 auto",
         }}
       >
-        <UploadSection
-          eventId={event.uuid}
-          onUpload={(newItem) => {
-            setMedia((prev) => [newItem, ...prev]);
-          }}
-        />
-      </div>
-
-      {/* GALLERY */}
-      <div style={{ marginTop: 40 }}>
-        <h3
+        {/* HERO */}
+        <section
           style={{
-            fontSize: 18,
-            marginBottom: 15,
-            color: "#8b5e4c",
-            fontWeight: 600,
+            textAlign: "center",
+            paddingTop: 70,
+            paddingBottom: 38,
           }}
         >
-          📸 Anılar
-        </h3>
+          <h1
+            style={{
+              fontSize: 46,
+              fontWeight: 500,
+              color: "#4b342d",
+              margin: 0,
+              lineHeight: 1.05,
+              fontFamily: "Georgia, serif",
+              textShadow: "0 2px 10px rgba(255,255,255,0.7)",
+            }}
+          >
+            {event.title}
+          </h1>
 
-        <Gallery media={media} />
-      </div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 12,
+              margin: "22px 0",
+              color: "#b08968",
+            }}
+          >
+            <span
+              style={{
+                width: 60,
+                height: 1,
+                background: "#c9a493",
+              }}
+            />
+            <span style={{ fontSize: 18 }}>♡</span>
+            <span
+              style={{
+                width: 60,
+                height: 1,
+                background: "#c9a493",
+              }}
+            />
+          </div>
+
+          <h2
+            style={{
+              fontSize: 28,
+              fontWeight: 600,
+              color: "#a46f60",
+              margin: 0,
+              fontFamily: "Georgia, serif",
+              textShadow: "0 2px 8px rgba(255,255,255,0.8)",
+            }}
+          >
+            Anılarını Bizimle Paylaş
+          </h2>
+
+          <p
+            style={{
+              fontSize: 17,
+              color: "#3f302b",
+              lineHeight: 1.7,
+              marginTop: 14,
+              textShadow: "0 2px 8px rgba(255,255,255,0.85)",
+              fontWeight: 500,
+            }}
+          >
+            Bu özel günden yakaladığın kareleri <br />
+            yükleyerek hikayemize ortak ol ✨
+          </p>
+        </section>
+
+        {/* UPLOAD AREA */}
+        <section
+          style={{
+            marginTop: 18,
+          }}
+        >
+          <UploadSection
+            eventId={event.uuid}
+            onUpload={(newItem) => {
+              setMedia((prev) => [newItem, ...prev]);
+            }}
+          />
+        </section>
+
+        {/* GALLERY */}
+        <section
+          style={{
+            marginTop: 28,
+            background: "rgba(255, 248, 243, 0.78)",
+            borderRadius: 20,
+            padding: 18,
+            boxShadow: "0 12px 30px rgba(95,74,66,0.12)",
+            border: "1px solid rgba(190,145,123,0.35)",
+            backdropFilter: "blur(4px)",
+          }}
+        >
+          <div
+            style={{
+              textAlign: "center",
+              marginBottom: 18,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 10,
+                color: "#a46f60",
+                marginBottom: 8,
+              }}
+            >
+              <span
+                style={{
+                  width: 48,
+                  height: 1,
+                  background: "#c9a493",
+                }}
+              />
+              <span style={{ fontSize: 20 }}>📷</span>
+              <span
+                style={{
+                  width: 48,
+                  height: 1,
+                  background: "#c9a493",
+                }}
+              />
+            </div>
+
+            <h3
+              style={{
+                fontSize: 26,
+                margin: 0,
+                color: "#6b4f4f",
+                fontWeight: 600,
+                fontFamily: "Georgia, serif",
+              }}
+            >
+              Anılar
+            </h3>
+
+            <p
+              style={{
+                margin: "6px 0 0",
+                fontSize: 14,
+                color: "#6f625c",
+              }}
+            >
+              Bu özel günden paylaşılan kareler
+            </p>
+
+            <div
+              style={{
+                display: "inline-block",
+                marginTop: 10,
+                fontSize: 12,
+                color: "#8b5e4c",
+                background: "#fff4ef",
+                border: "1px solid #eadbd3",
+                borderRadius: 999,
+                padding: "6px 12px",
+              }}
+            >
+              {media.length} medya
+            </div>
+          </div>
+
+          <Gallery media={media} />
+        </section>
+      </main>
     </div>
   );
 }
