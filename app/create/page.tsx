@@ -134,26 +134,36 @@ export default function CreatePage() {
       style={{
         minHeight: "100vh",
         background: "#f7f3f0",
-        padding: "20px 16px",
+        padding: "8px 16px 24px",
         fontFamily: "sans-serif",
       }}
     >
+      {/* TOP NAV */}
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
-          marginBottom: 20,
+          gap: 10,
+          marginBottom: 12,
+          position: "sticky",
+          top: 8,
+          zIndex: 20,
+          background: "rgba(247, 243, 240, 0.92)",
+          backdropFilter: "blur(8px)",
+          padding: "6px 0",
         }}
       >
         <button
           onClick={() => router.push("/dashboard")}
           style={{
+            flex: 1,
             padding: 10,
             borderRadius: 10,
             border: "1px solid #d6d3d1",
             background: "white",
             color: "#6b4f4f",
             cursor: "pointer",
+            fontWeight: 600,
           }}
         >
           📊 Event Listesi
@@ -162,12 +172,13 @@ export default function CreatePage() {
         <button
           onClick={logout}
           style={{
-            padding: 10,
+            padding: "10px 14px",
             borderRadius: 10,
             border: "1px solid #d6d3d1",
             background: "white",
             color: "#6b4f4f",
             cursor: "pointer",
+            fontWeight: 600,
           }}
         >
           Çıkış
@@ -180,7 +191,7 @@ export default function CreatePage() {
           margin: "0 auto",
           background: "white",
           borderRadius: 20,
-          padding: 25,
+          padding: 20,
           boxShadow: "0 10px 30px rgba(0,0,0,0.05)",
         }}
       >
@@ -190,6 +201,7 @@ export default function CreatePage() {
             textAlign: "center",
             color: "#8b5e4c",
             marginBottom: 10,
+            marginTop: 0,
           }}
         >
           🎉 Event Oluştur
@@ -200,7 +212,7 @@ export default function CreatePage() {
             textAlign: "center",
             fontSize: 14,
             color: "#6b7280",
-            marginBottom: 20,
+            marginBottom: 18,
           }}
         >
           Yeni bir etkinlik oluştur ve QR ile paylaş
@@ -220,6 +232,7 @@ export default function CreatePage() {
               color: "black",
               outline: "none",
               fontSize: 14,
+              boxSizing: "border-box",
             }}
           />
 
