@@ -10,59 +10,54 @@ export default function UploadSection({
   eventId: string;
   onUpload?: (item: any) => void;
 }) {
-  const [file, setFile] = useState<File | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-
-    if (!selectedFile) return;
-
-    setFile(selectedFile);
+    if (!e.target.files) return;
+    setFiles(Array.from(e.target.files));
   };
 
   const handleUpload = async () => {
-    if (!file) return;
+    if (files.length === 0) return;
 
     setLoading(true);
 
     try {
-      const fileExt = file.name.split(".").pop();
-      const filePath = `${eventId}/${crypto.randomUUID()}.${fileExt}`;
+      for (const file of files) {
+        const fileExt = file.name.split(".").pop();
+        const filePath = `${eventId}/${crypto.randomUUID()}.${fileExt}`;
 
-      // storage upload
-      const { data, error } = await supabase.storage
-        .from("media")
-        .upload(filePath, file);
+        const { data, error } = await supabase.storage
+          .from("media")
+          .upload(filePath, file);
 
-      if (error) throw error;
+        if (error) throw error;
 
-      // public url
-      const { data: publicUrlData } = supabase.storage
-        .from("media")
-        .getPublicUrl(data.path);
+        const { data: publicUrlData } = supabase.storage
+          .from("media")
+          .getPublicUrl(data.path);
 
-      const publicUrl = publicUrlData.publicUrl;
+        const publicUrl = publicUrlData.publicUrl;
 
-      // db insert
-      await supabase.from("media").insert({
-        event_id: eventId,
-        url: publicUrl,
-        type: file.type.startsWith("video") ? "video" : "image",
-      });
+        await supabase.from("media").insert({
+          event_id: eventId,
+          url: publicUrl,
+          type: file.type.startsWith("video") ? "video" : "image",
+        });
 
-      // 🔥 REALTIME UI UPDATE
-      const newItem = {
-        id: crypto.randomUUID(),
-        url: publicUrl,
-        type: file.type.startsWith("video") ? "video" : "image",
-      };
+        const newItem = {
+          id: crypto.randomUUID(),
+          url: publicUrl,
+          type: file.type.startsWith("video") ? "video" : "image",
+        };
 
-      onUpload?.(newItem);
+        onUpload?.(newItem);
+      }
 
-      setFile(null);
+      setFiles([]);
     } catch (err) {
-      console.log("UPLOAD ERROR:", err);
+      console.log(err);
       alert("Upload failed ❌");
     } finally {
       setLoading(false);
@@ -70,55 +65,109 @@ export default function UploadSection({
   };
 
   return (
-    <div style={{ marginTop: 20 }}>
-      <h3 style={{ marginBottom: 10 }}>📤 Upload Media</h3>
-
-      {/* FILE SELECT */}
+    <div>
+      {/* 📦 UPLOAD BOX */}
       <label
         style={{
-          display: "block",
-          border: "2px dashed #d1d5db",
-          padding: 16,
-          borderRadius: 12,
-          textAlign: "center",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          border: "2px dashed #e5d5cf",
+          borderRadius: 20,
+          padding: 30,
           cursor: "pointer",
-          background: "#fafafa",
-          color: "#6b7280",
+          background: "#fffaf8",
+          textAlign: "center",
         }}
       >
         <input
           type="file"
+          multiple
           accept="image/*,video/*"
           onChange={handleFileChange}
           style={{ display: "none" }}
         />
 
-        {file ? (
-          <span style={{ color: "#111", fontWeight: 500 }}>
-            📎 {file.name}
-          </span>
+        {/* 📸 ICON */}
+        <div
+          style={{
+            fontSize: 40,
+            marginBottom: 10,
+            color: "#b08968",
+          }}
+        >
+          📷
+        </div>
+
+        {/* TEXT */}
+        {files.length > 0 ? (
+          <div style={{ color: "#6b4f4f", fontWeight: 500 }}>
+            {files.length} dosya seçildi
+          </div>
         ) : (
-          <span>📱 Fotoğraf / Video seçmek için tıkla</span>
+          <>
+            <div
+              style={{
+                fontWeight: 600,
+                color: "#6b4f4f",
+                marginBottom: 4,
+              }}
+            >
+              Dosya Yükle
+            </div>
+
+            <div
+              style={{
+                fontSize: 13,
+                color: "#a8a29e",
+              }}
+            >
+              Fotoğrafları seç veya sürükle
+            </div>
+          </>
         )}
       </label>
 
-      {/* UPLOAD BUTTON */}
+      {/* 📄 FILE LIST */}
+      {files.length > 0 && (
+        <div
+          style={{
+            marginTop: 12,
+            fontSize: 12,
+            color: "#7c6f64",
+          }}
+        >
+          {files.map((f, i) => (
+            <div key={i}>• {f.name}</div>
+          ))}
+        </div>
+      )}
+
+      {/* 🚀 UPLOAD BUTTON */}
       <button
         onClick={handleUpload}
-        disabled={!file || loading}
+        disabled={files.length === 0 || loading}
         style={{
-          marginTop: 12,
+          marginTop: 16,
           width: "100%",
-          padding: 12,
-          borderRadius: 12,
+          padding: 14,
+          borderRadius: 14,
           border: "none",
-          background: file ? "#111" : "#d1d5db",
+          background:
+            files.length > 0
+              ? "linear-gradient(135deg, #c08457, #b08968)"
+              : "#e5e7eb",
           color: "white",
-          cursor: file ? "pointer" : "not-allowed",
           fontWeight: 600,
+          cursor: files.length > 0 ? "pointer" : "not-allowed",
+          boxShadow:
+            files.length > 0
+              ? "0 5px 15px rgba(176,137,104,0.3)"
+              : "none",
         }}
       >
-        {loading ? "Uploading..." : "Upload"}
+        {loading ? "Yükleniyor..." : "Fotoğrafları Gönder"}
       </button>
     </div>
   );
